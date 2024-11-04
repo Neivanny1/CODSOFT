@@ -21,10 +21,11 @@ class TaskCreate(BaseModel):
 class Task(BaseModel):
     id: int
     title: str
-    description: str
+    description: Optional[str] = None  # Make description optional
     completed: bool
     date_created: datetime
     due_time: Optional[datetime] = None
+    owner_id: int  # Include owner_id to identify the user who created the task
 
     class Config:
         orm_mode = True

@@ -42,11 +42,13 @@ db: Session = Depends(utils.get_db)):
 
 @app.post("/tasks/", response_model=schemas.Task, tags=["Tasks"],
 summary="Create a new task", description="Create a new task for the current user.")
-def create_task(task: schemas.TaskCreate,
-    current_user: schemas.User = Depends(auth.get_current_user),
-    db: Session = Depends(utils.get_db)):
-    print(task)
+def create_task(
+    task: schemas.TaskCreate, 
+    db: Session = Depends(utils.get_db),
+    current_user: int = Depends(auth.get_current_user)):
+    # Create a new task with the owner's ID set to the current user's ID
     return utils.create_task(db, task, current_user.id)
+
 
 @app.get("/tasks/", response_model=List[schemas.Task],
 tags=["Tasks"], summary="Retrieve all tasks",
@@ -65,4 +67,4 @@ def delete_task(task_id: int, current_user: schemas.User = Depends(auth.get_curr
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

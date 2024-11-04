@@ -20,8 +20,9 @@ def create_user(db: Session, user: schemas.UserCreate):
 def get_user(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
-def create_task(db: Session, task: schemas.TaskCreate, user_id: int):
-    db_task = models.Task(**task.dict(), owner_id=user_id)
+def create_task(db: Session, task: schemas.TaskCreate, owner_id: int):
+    # Create a new Task instance with the provided owner_id
+    db_task = models.Task(owner_id=current_user.id, **task.dict())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)

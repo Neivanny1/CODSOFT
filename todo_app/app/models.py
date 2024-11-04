@@ -3,7 +3,6 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -20,6 +19,9 @@ class Task(Base):
     description = Column(String, nullable=True)
     completed = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
-    due_time = Column(DateTime, nullable=True)
-    owner = relationship("User", back_populates="tasks")
+
+    # New fields
     date_created = Column(DateTime, default=datetime.utcnow)
+    due_time = Column(DateTime, nullable=True)
+
+    owner = relationship("User", back_populates="tasks")
