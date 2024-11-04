@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your Tasks</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.title.label }} {{ form.title() }}<br>
+    {{ form.description.label }} {{ form.description() }}<br>
+    {{ form.completed.label }} {{ form.completed() }}<br>
+    {{ form.submit() }}
+</form>
+<ul>
+    {% for task in tasks %}
+        <li>{{ task.title }} - {{ task.description }} - Completed: {{ task.completed }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
