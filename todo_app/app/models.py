@@ -1,22 +1,25 @@
-#!/usr/bin/python3
-'''
-Defines models
-'''
+from .database import Base
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+from datetime import datetime
 
-from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password_hash = Column(String)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password_hash = db.Column(db.String(150), nullable=False)
+    tasks = relationship("Task", back_populates="owner")
 
-    tasks = db.relationship("Task", backref="owner", lazy=True)
+class Task(Base):
+    __tablename__ = "tasks"
 
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(255))
-    completed = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description = Column(String, nullable=True)
+    completed = Column(Boolean, default=False)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    due_time = Column(DateTime, nullable=True)
+    owner = relationship("User", back_populates="tasks")
+    date_created = Column(DateTime, default=datetime.utcnow)

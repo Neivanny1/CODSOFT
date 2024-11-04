@@ -1,1 +1,0 @@
-# To-Do List application in Python using FastAPI with JWT authentication
