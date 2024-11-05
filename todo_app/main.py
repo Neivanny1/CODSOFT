@@ -1,10 +1,15 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from typing import List
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 
-from app import models, schemas, utils, auth
-from app.database import SessionLocal, engine
+from app import models
+from app.database import engine
+from app.routers import task, user, auth
+from app.config import settings
+
+
+
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="To-Do List API",
@@ -12,58 +17,69 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Create tables in the database
-models.Base.metadata.create_all(bind=engine)
+origins = ["*"]
 
-# OAuth2 scheme for handling the token
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Register Endpoint
-@app.post("/register/", response_model=schemas.User, tags=["Users"],
-summary="Register a new user", description="Create a new uset for the system.")
-def register(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
-    # Check if the username already exists
-    existing_user = utils.get_user(db, user.username)
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    
-    return utils.create_user(db, user)
+app.include_router(task.router)
+app.include_router(user.router)
+app.include_router(auth.router)
 
-@app.post("/login", tags=["Users"],
-summary="Login", description="Loggs in user")
-async def login(form_data: OAuth2PasswordRequestForm = Depends(),
-db: Session = Depends(utils.get_db)):
-    user = auth.authenticate_user(db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    access_token = auth.create_access_token(data={"sub": str(user.id)})
-    return {"access_token": access_token, "token_type": "bearer"}
-
-
-@app.post("/tasks/", response_model=schemas.Task, tags=["Tasks"],
-summary="Create a new task", description="Create a new task for the current user.")
-def create_task(
-    task: schemas.TaskCreate, 
-    db: Session = Depends(utils.get_db),
-    current_user: int = Depends(auth.get_current_user)):
-    # Create a new task with the owner's ID set to the current user's ID
-    return utils.create_task(db, task, current_user.id)
-
-
-@app.get("/tasks/", response_model=List[schemas.Task],
-tags=["Tasks"], summary="Retrieve all tasks",
-description="Retrieve a list of all tasks for the current user.")
-def read_tasks(
-    current_user: schemas.User = Depends(auth.get_current_user), 
-    db: Session = Depends(utils.get_db)
-):
-    return utils.get_tasks(db, current_user.id)
-
-@app.delete("/tasks/{task_id}", tags=["Tasks"],
-summary="Delete a task", description="Delete a specific task by its ID.")
-def delete_task(task_id: int, current_user: schemas.User = Depends(auth.get_current_user), db: Session = Depends(utils.get_db)):
-    utils.delete_task(db, task_id, current_user.id)
-    return {"detail": "Task deleted successfully"}
+@app.get("/", response_class=HTMLResponse, tags=["HOMEPAGE"], summary="HOMEPAGE OF THE TODO",
+description="EXPLAINS EVERYTHING ABOUT THE APP")
+def root():
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to My To-Do Project</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                margin: 50px;
+                background-color: #f5f5f5;
+            }
+            h1 {
+                color: #333;
+            }
+            p {
+                color: #666;
+                font-size: 1.2em;
+            }
+            a {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 10px 20px;
+                color: white;
+                background-color: #007acc;
+                text-decoration: none;
+                font-size: 1.1em;
+                border-radius: 5px;
+            }
+            a:hover {
+                background-color: #005f99;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Welcome to My To-Do Project!</h1>
+        <p>This project is part of my internship at CodSoft.</p>
+        <p>I'm Eric Mwakazi, a Backend Developer.</p>
+        <p>Click the link below to explore the API documentation and try out the endpoints.</p>
+        <a href="/docs">Go to Swagger UI</a>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
 
 if __name__ == "__main__":
     import uvicorn

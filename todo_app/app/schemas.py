@@ -1,31 +1,65 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from typing import Optional
+
+from pydantic.types import conint
+
+
+class TaskBase(BaseModel):
+    title: str
+    content: str
+    published: bool = True
+
+
+class TaskCreate(TaskBase):
+    pass
+
+
+class UserOut(BaseModel):
+    id: int
+    email: EmailStr
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class Task(TaskBase):
+    id: int
+    created_at: datetime
+    owner_id: int
+    owner: UserOut
+
+    class Config:
+        orm_mode = True
+
+
+class TaskOut(BaseModel):
+    Task: Task
+
+    class Config:
+        orm_mode = True
+
 
 class UserCreate(BaseModel):
-    username: str
+    email: EmailStr
     password: str
 
-class User(BaseModel):
-    id: int
-    username: str
 
-    class Config:
-        orm_mode = True
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
-class TaskCreate(BaseModel):
-    title: str
-    description: Optional[str] = None
-    due_time: Optional[datetime] = None  # Optional due time
 
-class Task(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None  # Make description optional
-    completed: bool
-    date_created: datetime
-    due_time: Optional[datetime] = None
-    owner_id: int  # Include owner_id to identify the user who created the task
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
-    class Config:
-        orm_mode = True
+
+class TokenData(BaseModel):
+    id: Optional[str] = None
+
+
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1)

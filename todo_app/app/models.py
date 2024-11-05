@@ -1,27 +1,31 @@
-from .database import Base
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.sqltypes import TIMESTAMP
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    password_hash = Column(String)
+from .database import Base
 
-    tasks = relationship("Task", back_populates="owner")
 
 class Task(Base):
     __tablename__ = "tasks"
 
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, nullable=True)
-    completed = Column(Boolean, default=False)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    id = Column(Integer, primary_key=True, nullable=False)
+    title = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    accompolised = Column(Boolean, server_default='TRUE', nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
+    owner_id = Column(Integer, ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
 
-    # New fields
-    date_created = Column(DateTime, default=datetime.utcnow)
-    due_time = Column(DateTime, nullable=True)
+    owner = relationship("User")
 
-    owner = relationship("User", back_populates="tasks")
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False, unique=True)
+    password = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
+
