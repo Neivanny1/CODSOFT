@@ -9,7 +9,7 @@ from app.config import settings
 
 
 
-# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="To-Do List API",
@@ -26,10 +26,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.include_router(task.router)
-app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(user.router)
+app.include_router(task.router)
 
 @app.get("/", response_class=HTMLResponse, tags=["HOMEPAGE"], summary="HOMEPAGE OF THE TODO",
 description="EXPLAINS EVERYTHING ABOUT THE APP")

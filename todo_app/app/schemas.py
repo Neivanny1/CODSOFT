@@ -8,7 +8,7 @@ from pydantic.types import conint
 class TaskBase(BaseModel):
     title: str
     content: str
-    published: bool = True
+    accompolished: bool = True
 
 
 class TaskCreate(TaskBase):
@@ -21,7 +21,7 @@ class UserOut(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Task(TaskBase):
@@ -31,14 +31,19 @@ class Task(TaskBase):
     owner: UserOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TaskOut(BaseModel):
-    Task: Task
+    id: int
+    title: str
+    content: str
+    accompolished: bool
+    created_at: datetime
+    owner_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserCreate(BaseModel):

@@ -9,16 +9,9 @@ from ..database import get_db
 
 
 router = APIRouter(
-    prefix="/tasks",
+    prefix="/task",
     tags=['Tasks']
 )
-
-@router.get("/", response_model=List[schemas.TaskOut])
-def get_tasks(db: Session = Depends(get_db),
-current_user: int = Depends(oauth2.get_current_user),
-limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    tasks = db.query(models.Task).filter(models.Task.owner_id == current_user.id).all()
-    return tasks
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Task)
@@ -34,8 +27,9 @@ db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_us
 
 
 @router.get("/{id}", response_model=schemas.TaskOut)
-def get_task(id: int, db: Session = Depends(get_db),
-current_user: int = Depends(oauth2.get_current_user)):
+def get_task(id: int,
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth2.get_current_user)):
     task = db.query(models.Task).filter(
         models.Task.owner_id == current_user.id,
         models.Task.id == id
@@ -46,6 +40,24 @@ current_user: int = Depends(oauth2.get_current_user)):
 
     return task
 
+
+@router.get("/", response_model=List[schemas.TaskOut])
+def get_tasks(
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth2.get_current_user),
+    limit: int = 10,
+    skip: int = 0,
+    search: Optional[str] = ""
+):
+    tasks_query = db.query(models.Task).filter(models.Task.owner_id == current_user.id)
+    
+    if search:
+        tasks_query = tasks_query.filter(models.Task.title.contains(search))
+    
+    tasks = tasks_query.limit(limit).offset(skip).all()
+    
+    # Convert each SQLAlchemy model to a Pydantic model
+    return [schemas.TaskOut.from_orm(task) for task in tasks]
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
