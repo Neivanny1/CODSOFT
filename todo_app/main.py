@@ -6,7 +6,9 @@ from app import models
 from app.database import engine
 from app.routers import task, user, auth
 from app.config import settings
-
+from fastapi.templating import Jinja2Templates
+from pathlib import Path
+from starlette.requests import Request
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -17,6 +19,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
+templates = Jinja2Templates(directory=str(Path(__file__).parent))
 origins = ["*"]
 
 app.add_middleware(
@@ -75,10 +78,15 @@ def root():
         <p>I'm Eric Mwakazi, a Backend Developer.</p>
         <p>Click the link below to explore the API documentation and try out the endpoints.</p>
         <a href="/docs">Go to Swagger UI</a>
+        <a href="/report">Check Test Report</a>
     </body>
     </html>
     """
     return HTMLResponse(content=html_content)
+
+@app.get("/report", response_class=HTMLResponse)
+async def render_report(request: Request):
+    return templates.TemplateResponse("report.html", {"request": request})
 
 if __name__ == "__main__":
     import uvicorn
