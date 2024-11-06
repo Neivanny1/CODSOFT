@@ -7,6 +7,7 @@ from app.database import engine
 from app.routers import task, user, auth
 from app.config import settings
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from starlette.requests import Request
 
@@ -18,8 +19,9 @@ app = FastAPI(
     description="An API for managing your To-Do tasks",
     version="1.0.0",
 )
-
+app.mount("/assets", StaticFiles(directory=str(Path(__file__).parent / "assets")), name="assets")
 templates = Jinja2Templates(directory=str(Path(__file__).parent))
+
 origins = ["*"]
 
 app.add_middleware(
