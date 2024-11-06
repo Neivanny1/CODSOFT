@@ -33,3 +33,7 @@ uvicorn main:app --reload
 
 <img src='./pics/home.png'>
 <img src='./pics/home1.png'>
+
+# Test Report
+
+You can view the test report [here](./report.html).
