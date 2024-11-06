@@ -2,13 +2,13 @@ from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from app.main import app
+from sqlalchemy.orm import declarative_base
+from main import app
 
 from app.config import settings
 from app.database import get_db
 from app.database import Base
-from alembic import command
+#from alembic import command
 
 
 # SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:password123@localhost:5432/fastapi_test'
