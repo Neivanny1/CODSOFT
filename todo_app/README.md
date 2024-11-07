@@ -34,6 +34,10 @@ uvicorn main:app --reload
 <img src='./pics/home.png'>
 <img src='./pics/home1.png'>
 
-# Test Report
+# Running test with pytest
+```
+pytest --html=report.html
+```
+Above generates a report of test run and save results in report.html
 
 You can view the test report [here](./report.html).
