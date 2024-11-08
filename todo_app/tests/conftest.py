@@ -12,8 +12,6 @@ from app.oauth2 import create_access_token
 from app import models
 #from alembic import command
 
-
-# SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:password123@localhost:5432/fastapi_test'
 SQLALCHEMY_DATABASE_URL = settings.DATABASEURL
 
 
@@ -108,17 +106,11 @@ def test_posts(test_user, session, test_user2):
         "content": "3rd content",
         "owner_id": test_user2['id']
     }]
-
     def create_post_model(post):
         return models.Post(**post)
-
     post_map = map(create_post_model, posts_data)
     posts = list(post_map)
-
     session.add_all(posts)
-    # session.add_all([models.Post(title="first title", content="first content", owner_id=test_user['id']),
-    #                 models.Post(title="2nd title", content="2nd content", owner_id=test_user['id']), models.Post(title="3rd title", content="3rd content", owner_id=test_user['id'])])
     session.commit()
-
     posts = session.query(models.Post).all()
     return posts

@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+"""
+Main app
+"""
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,8 +11,6 @@ from app import models
 from app.database import engine
 from app.routers import task, user, auth
 from app.config import settings
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from starlette.requests import Request
 
@@ -30,10 +33,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+'''
+Imports routes
+'''
 app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(task.router)
 
+'''
+Home page route
+'''
 @app.get("/", response_class=HTMLResponse, tags=["HOMEPAGE"], summary="HOMEPAGE OF THE TODO",
 description="EXPLAINS EVERYTHING ABOUT THE APP")
 def root():

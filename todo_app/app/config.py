@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+"""
+Handles environment variables
+"""
+
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
