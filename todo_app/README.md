@@ -40,4 +40,3 @@ pytest --html=report.html
 ```
 Above generates a report of test run and save results in report.html
 
-You can view the test report [here](./report.html).
