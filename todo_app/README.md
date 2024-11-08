@@ -1,5 +1,4 @@
-# CODSOFT INTERNSHIP TODO PROJECT
-## Task
+# Task 1
 <img src='./pics/todoTask.png'>
 
 ## Requirements
