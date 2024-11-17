@@ -33,36 +33,42 @@ Get user input for password length
 def gets_userInput():
     while True:
         try:
-            length = int(input("Enter the password length (minimum 8 characters): "))
+            length = int(input(Colors.GREEN + "Enter the password length (minimum 8 characters): "))
             if length >= 8 and length <= 256:
-                print(length)
                 break
-            elif length > 256:
-                print('Password to big size not supported')
+            if length > 256:
+                print(Colors.RED + 'Password to big size not supported. Try again.')
+            elif length < 8:
+                print(Colors.RED + "Password length must be at least 8 characters for security. Try again.")
             else:
-                print("Password length must be at least 8 characters for security. Try again.")
+                print(Colors.RED + "Invalid input. Please enter a valid number." ) 
         except ValueError:
-            print("Invalid input. Please enter a valid number.")  
+            print(Colors.RED + "Invalid input. Please enter a valid number." ) 
     return length
+
 '''
 gets user choice for complexity
 '''
 def gets_userChoice():
-    print("\nChoose password complexity:")
-    print("1. Lowercase letters only")
+    print(Colors.HEADER + "\nChoose password complexity:" + Colors.ENDC)
+    print(Colors.YELLOW + "1. Lowercase letters only")
     print("2. Lowercase and Uppercase letters")
     print("3. Letters and Digits")
-    print("4. Letters, Digits, and Special Characters")
+    print("4. Letters, Digits, and Special Characters" + Colors.ENDC)
     while True:
         try:
-            choice = int(input("Enter your choice (1-4): "))
-            if choice in range(1,5):
+            # Prompt user for input
+            choice = int(input(Colors.BLUE + "Enter your choice (1-4): " + Colors.ENDC))
+            # Check if the choice is valid
+            if choice in [1, 2, 3, 4]:
                 break
             else:
-                print("Invalid choice. Please enter a number between 1 and 4.")
+                print(Colors.RED + "Invalid choice. Please select a number between 1 and 4." + Colors.ENDC)
         except ValueError:
-            print("Invalid choice. Please enter a valid option (1-4).")
+            # Handle non-integer input
+            print(Colors.RED + "Invalid input. Please enter a valid number (1-4)." + Colors.ENDC)
     return choice
+
 
 '''
 Build the character pool based on user choice
@@ -87,10 +93,11 @@ def generate_password():
     length = gets_userInput()
     char_pool = build_char_pool()
     password = ''.join(random.choice(char_pool) for _ in range(length))
-    print(f"\nGenerated Password: {password}")
+    print(Colors.GREEN + f"\nGenerated Password: {password}" + Colors.ENDC)
+    return password
 
 def main():
-    print("Welcome to the Password Generator!")
+    print( Colors.GREEN + "Welcome to the Password Generator!")
     generate_password()
 
 '''
