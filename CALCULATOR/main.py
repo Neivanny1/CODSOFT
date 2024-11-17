@@ -21,16 +21,22 @@ class Colors:
 '''
 ASCII banner
 '''
+BANNER ='''
+                                                          
+  ,ad8888ba,         db         88           ,ad8888ba,   
+ d8"'    `"8b       d88b        88          d8"'    `"8b  
+d8'                d8'`8b       88         d8'            
+88                d8'  `8b      88         88             
+88               d8YaaaaY8b     88         88             
+Y8,             d8""""""""8b    88         Y8,            
+ Y8a.    .a8P  d8'        `8b   88          Y8a.    .a8P  
+  `"Y8888Y"'  d8'          `8b  88888888888  `"Y8888Y"'   
+                                                          
+                                                          
+'''
 def print_banner():
-    print(Colors.BLUE + Colors.BOLD)
-    print(r"""
-       ____      _            _        _             
-  / ___|__ _| | ___ _   _| | __ _ | |_ ___   ___ 
- | |   / _` | |/ __| | | | |/ _` || __/ _ \ / _ \
- | |__| (_| | | (__| |_| | | (_| || || (_) |  __/
-  \____\__,_|_|\___|\__,_|_|\__,_| \__\___/ \___|
-
-    """)
+    print(Colors.GREEN + Colors.BOLD)
+    print(BANNER)
     print(Colors.ENDC)
 '''
 Bitwise handler
