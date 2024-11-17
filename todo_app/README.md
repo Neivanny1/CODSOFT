@@ -18,7 +18,14 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
-4. Run the project:
+4. Create .env file with sample:
+```
+DATABASEURL="sqlite:///./test.db"
+SECRET_KEY="your_secret_key_here"
+ALGORITHM="HS256"
+TOKEN_EXPIRATION=30
+'''
+5. Run the project:
 ```
 python3 main.py
 ```
