@@ -5,7 +5,7 @@
     Texteditor
     python3 and pip
 ## Installation
-While inside the todo folder run below commands:
+While inside the TODOAPP folder run below commands:
 1. To create virtual env
 ```
 python3 -m venv venv

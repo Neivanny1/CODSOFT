@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock-Paper-Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .scoreboard {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .choices {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .result {
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock-Paper-Scissors</h1>
+    <div class="scoreboard">
+        <p>Your Score: {{ user_score }}</p>
+        <p>Computer Score: {{ computer_score }}</p>
+    </div>
+    <form method="POST">
+        <div class="choices">
+            <button type="submit" name="choice" value="rock">Rock</button>
+            <button type="submit" name="choice" value="paper">Paper</button>
+            <button type="submit" name="choice" value="scissors">Scissors</button>
+        </div>
+    </form>
+    {% if result %}
+    <div class="result">
+        <p>You chose: <strong>{{ user_choice }}</strong></p>
+        <p>Computer chose: <strong>{{ computer_choice }}</strong></p>
+        <p>{{ result }}</p>
+    </div>
+    {% endif %}
+    <a href="/reset"><button>Reset Scores</button></a>
+</body>
+</html>
