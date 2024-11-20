@@ -16,6 +16,7 @@
         .scoreboard {
             margin: 20px 0;
             font-size: 18px;
+            color: blueviolet;
         }
         .choices {
             margin: 20px 0;
@@ -25,6 +26,7 @@
             font-size: 16px;
             margin: 10px;
             cursor: pointer;
+            color: #4CAF50;
         }
         .result {
             margin: 20px 0;
@@ -47,12 +49,21 @@
         </div>
     </form>
     {% if result %}
-    <div class="result">
-        <p>You chose: <strong>{{ user_choice }}</strong></p>
-        <p>Computer chose: <strong>{{ computer_choice }}</strong></p>
-        <p>{{ result }}</p>
-    </div>
+    <div class="result" >
+        <div class="who">
+            <p>Your chose: <strong style="color: gold;">{{ user_choice }}</strong></p>
+            <p>Computer chose: <strong style="color: #4CAF50;">{{ computer_choice }}</strong></p>
+        </div>
+        {% if result == 'You Win!' %}
+            <p style="color: #4CAF50;">{{ result }}</p>
+        {% elif result == 'You Lose!' %}
+            <p style="color: red">{{ result }}</p>
+        {% else %}
+            <p style="color: violet">{{ result }}</p>
+        {% endif %}
+        </div>
     {% endif %}
+
     <a href="/reset"><button>Reset Scores</button></a>
 </body>
 </html>

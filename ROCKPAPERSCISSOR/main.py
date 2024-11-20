@@ -6,6 +6,9 @@ app = Flask(__name__)
 # Initialize global variables for score tracking
 user_score = 0
 computer_score = 0
+WIN_POINTS = 3
+LOSE_POINTS = 0
+DRAW_POINTS = 1
 
 # Choices for the game
 choices = ["rock", "paper", "scissors"]
@@ -35,12 +38,15 @@ def index():
         winner = determine_winner(user_choice, computer_choice)
 
         if winner == "user":
-            user_score += 1
+            user_score += WIN_POINTS
             result = "You Win!"
         elif winner == "computer":
-            computer_score += 1
+            computer_score += WIN_POINTS
             result = "You Lose!"
         else:
+            # Tie case: Points are shared
+            user_score += DRAW_POINTS
+            computer_score += DRAW_POINTS
             result = "It's a Tie!"
 
     return render_template(
